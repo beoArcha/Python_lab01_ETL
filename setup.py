@@ -8,5 +8,6 @@ setup(
     license='MIT',
     author='Marcin Stefanski',
     author_email='marcinstefanski@outlook.com',
-    description='for learning purposes'
+    description='for learning purposes',
+    install_requires=['pandas', 'sqlalchemy']
 )
