@@ -1,2 +1,2 @@
-# Python_lab01_ETL
+# Python lab01 ETL
 Python 01 lab project
