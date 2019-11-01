@@ -3,7 +3,7 @@ from DataImport import DataImport
 
 def main():
     # region prepare
-    _is_print_elapsed = False
+    _is_print_elapsed = True
     default_directories = {'tracks': '.\\Files\\unique_tracks.txt', 'triplets': '.\\Files\\triplets_sample_20p.txt'}
     # endregion
     # region import tracks
@@ -12,8 +12,8 @@ def main():
     data.data_import('tracks', print_elapsed=_is_print_elapsed)
     # endregion
     # region import triplets
-    data.address = default_directories['triplets']
-    data.data_import('triplets', print_elapsed=_is_print_elapsed)
+    # data.address = default_directories['triplets']
+    # data.data_import('triplets', print_elapsed=_is_print_elapsed)
     # endregion
     input("\nPress any button to end...\t")
 
