@@ -9,8 +9,11 @@ def main():
     # region import tracks
     data = DataImport(default_directories['tracks'], '<SEP>')
     data.create_engine(print_elapsed=_is_print_elapsed)
-
     data.data_import('tracks', print_elapsed=_is_print_elapsed)
+    # endregion
+    # region import triplets
+    data.address = default_directories['triplets']
+    data.data_import('triplets', print_elapsed=_is_print_elapsed)
     # endregion
     input("\nPress any button to end...\t")
 
