@@ -5,7 +5,7 @@ setup(
     version='0.1',
     packages=[''],
     url='',
-    license='MIT',
+    license='MIT License',
     author='Marcin Stefanski',
     author_email='marcinstefanski@outlook.com',
     description='for learning purposes',
