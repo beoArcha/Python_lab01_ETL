@@ -8,7 +8,7 @@ from Tools import elapsed
 class DataImport:
     """Imports data from csv file to sqlite database"""
 
-    def __init__(self, address, separator=';', header=False):
+    def __init__(self, address, separator=';', header=False, test=False):
         """C'str"""
         self.address = address
         self.separator = separator
@@ -17,9 +17,11 @@ class DataImport:
         self.engine = db.null
         self.metadata = db.MetaData()
         self.encoding = 'ISO-8859-1'
+        self.columns_name_list = list()
         self.columns_name = ''
         self.INSERT_QUERY = 'INSERT INTO {table} ({fields}) VALUES ({values})'
         self.DATABASE = 'sqlite:///music.sqlite'
+        self.test = test
 
     def _read_line(self) -> Generator[list, list, str]:
         """Reads line of csv file"""
@@ -28,6 +30,8 @@ class DataImport:
             for line in ad:
                 yield line.split(self.separator)
                 cnt += 1
+                if self.test and cnt > 99:
+                    break
         return "Done, yielded {} lines".format(cnt)
 
     def _save_line(self, table_name: str, line: list) -> None:
@@ -45,7 +49,7 @@ class DataImport:
         """Creating table for sqlite database"""
         list_of_columns = list()
         list_of_columns.append(Column('id', Integer, primary_key=True, autoincrement=True))
-        if names_of_columns is None:
+        if names_of_columns is None and self.columns_name_list is None:
             names_of_columns = list()
             for i in range(number_of_columns):
                 name_of_column = 'column_{:03}'.format(i + 1)
@@ -53,6 +57,8 @@ class DataImport:
                 list_of_columns.append(Column(name_of_column, String))
             self.columns_name = ','.join(names_of_columns)
         else:
+            if self.columns_name_list is not None:
+                names_of_columns = self.columns_name_list
             for col in names_of_columns:
                 list_of_columns.append(Column(col, String))
             self.columns_name = ','.join(names_of_columns)
