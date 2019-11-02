@@ -6,7 +6,7 @@ from Tools import elapsed
 
 
 class DataImport:
-    """Imports data from csv file to sqlite"""
+    """Imports data from csv file to sqlite database"""
 
     def __init__(self, address, separator=';', header=False):
         """C'str"""
@@ -18,18 +18,28 @@ class DataImport:
         self.metadata = db.MetaData()
         self.encoding = 'ISO-8859-1'
         self.columns_name = ''
-        self.INSERT_QUERY = 'INSERT INTO {table} ({fields} VALUES ({values}))'
+        self.INSERT_QUERY = 'INSERT INTO {table} ({fields}) VALUES ({values})'
+        self.DATABASE = 'sqlite:///music.sqlite'
 
     def _read_line(self) -> Generator[list, list, str]:
         """Reads line of csv file"""
         with open(self.address, 'r', encoding=self.encoding) as ad:
+            cnt = 0
             for line in ad:
                 yield line.split(self.separator)
-        return "Done"
+                cnt += 1
+        return "Done, yielded {} lines".format(cnt)
 
     def _save_line(self, table_name: str, line: list) -> None:
         """Insert data into database"""
-        query = self.INSERT_QUERY.format(table=table_name, fields=self.columns_name, values=','.join(line))
+        values = ','.join(['\'{}\''.format(val.replace('\'', '\'\'')) for val in line])
+        query = self.INSERT_QUERY.format(table=table_name,
+                                         fields=self.columns_name,
+                                         values=values)
+        try:
+            self.connected.execute(query)
+        except Exception as e:
+            raise
 
     def _create_table(self, name: str, number_of_columns: int, names_of_columns: list = None) -> None:
         """Creating table for sqlite database"""
@@ -53,9 +63,6 @@ class DataImport:
             ex = sys.exc_info()
             print('Unexpected error: {}\n{}'.format(str(ex[0]), e))
 
-    def _get_columns_name(self) -> str:
-        pass
-
     @elapsed
     def data_import(self, table_name: str, **kwargs) -> None:
         """Importing data from csv file to sqlite database"""
@@ -76,11 +83,21 @@ class DataImport:
                         self._save_line(table_name, line)
                 except StopIteration:
                     break
+                except Exception as e:
+                    print(e)
+                    break
         else:
             print('First connect to your database engine')
 
     @elapsed
     def create_engine(self, **kwargs) -> None:
         """Creating connection to sqlite database"""
-        self.engine = db.create_engine('sqlite:///music.sqlite')
+        self.engine = db.create_engine(self.DATABASE)
         self.connected = self.engine.connect()
+
+    def disconnect_engine(self) -> None:
+        """Disconnecting sqlite database engine"""
+        if self.connected:
+            self.connected.close()
+        else:
+            print('Not connected to database')
