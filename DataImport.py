@@ -64,8 +64,9 @@ class DataImport:
                 list_of_columns.append(Column(col, String))
             self.columns_name = ','.join(names_of_columns)
         try:
-            database = db.Table(name, self.metadata, *list_of_columns)
-            database.create(self.engine)
+            if not self.engine.dialect.has_table(self.engine, name):
+                database = db.Table(name, self.metadata, *list_of_columns)
+                database.create(self.engine)
         except Exception as e:
             ex = sys.exc_info()
             print('Unexpected error: {}\n{}'.format(str(ex[0]), e))
