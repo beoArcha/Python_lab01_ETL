@@ -26,7 +26,9 @@ def print_info(is_print_elapsed):
                               'FROM tracks JOIN triplets ON tracks.track_id = triplets.track_id ' \
                               'GROUP BY title ORDER BY performances DESC LIMIT 5'
     data = DataImport('')
+    print('Most popular artist: ')
     print_result(data.execute(most_popular_artist, print_elapsed=is_print_elapsed), '{0} {1} {2}')
+    print('Five most popular songs: ')
     print_result(data.execute(five_most_popular_songs, print_elapsed=is_print_elapsed), '{0} {1} {2}')
 
 

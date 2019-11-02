@@ -1,4 +1,5 @@
 import sys
+import os
 import sqlalchemy as db
 from typing import Generator
 from sqlalchemy import Column, Integer, String
@@ -21,7 +22,7 @@ class DataImport:
         self.columns_name = ''
         self.test = test
         self.INSERT_QUERY = 'INSERT INTO {table} ({fields}) VALUES ({values})'
-        self.DATABASE = 'sqlite:///music.sqlite'
+        self.DATABASE = 'sqlite:///{}\\music.sqlite'.format(os.path.dirname(__file__))
         self.TEST_LIMIT = 10000
 
     def _read_line(self) -> Generator[list, list, str]:
@@ -37,7 +38,7 @@ class DataImport:
 
     def _save_line(self, table_name: str, line: list) -> None:
         """Insert data into database"""
-        values = ','.join(['\'{}\''.format(val.replace('\'', '\'\'')) for val in line])
+        values = ','.join(['\'{}\''.format(val.replace('\'', '\'\'').replace('\n', '')) for val in line])
         query = self.INSERT_QUERY.format(table=table_name,
                                          fields=self.columns_name,
                                          values=values)
