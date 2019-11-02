@@ -1,3 +1,4 @@
+import os
 from DataImport import DataImport
 from Tools import elapsed
 
@@ -39,14 +40,16 @@ def main(**kwargs):
     # region prepare
     _is_print_elapsed = True
     _is_test = False
-    default_directories = {'tracks': '.\\Files\\unique_tracks.txt', 'triplets': '.\\Files\\triplets_sample_20p.txt'}
+    _dir = os.path.dirname(__file__)
+    default_directories = {'tracks': '{}\\Files\\unique_tracks.txt'.format(_dir),
+                           'triplets': '{}\\Files\\triplets_sample_20p.txt'.format(_dir)}
     default_table_columns_names = {'tracks': ['performance_id', 'track_id', 'artist', 'title'],
                                    'triplets': ['user_id', 'track_id', 'date']}
     # endregion
     create(_is_print_elapsed, _is_test, default_directories, default_table_columns_names)
     print_info(_is_print_elapsed)
-    input("\nPress any button to end...\t")
 
 
 if __name__ == "__main__":
     main(print_elapsed=True)
+    input("\nPress any button to end...\t")
