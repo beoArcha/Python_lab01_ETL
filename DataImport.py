@@ -19,9 +19,10 @@ class DataImport:
         self.encoding = 'ISO-8859-1'
         self.columns_name_list = list()
         self.columns_name = ''
+        self.test = test
         self.INSERT_QUERY = 'INSERT INTO {table} ({fields}) VALUES ({values})'
         self.DATABASE = 'sqlite:///music.sqlite'
-        self.test = test
+        self.TEST_LIMIT = 10000
 
     def _read_line(self) -> Generator[list, list, str]:
         """Reads line of csv file"""
@@ -30,7 +31,7 @@ class DataImport:
             for line in ad:
                 yield line.split(self.separator)
                 cnt += 1
-                if self.test and cnt > 99:
+                if self.test and cnt >= self.TEST_LIMIT:
                     break
         return "Done, yielded {} lines".format(cnt)
 
@@ -101,9 +102,26 @@ class DataImport:
         self.engine = db.create_engine(self.DATABASE)
         self.connected = self.engine.connect()
 
+    @elapsed
+    def execute(self, query: str, **kwargs) -> list:
+        """Execute query to sqlite database"""
+        if self.connected:
+            return self.connected.execute(query)
+        else:
+            self.create_engine()
+            list_to_return = list()
+            try:
+                ret = self.connected.execute(query)
+                list_to_return = [i for i in ret]
+            except Exception as e:
+                print(e)
+            self.disconnect_engine()
+            return list_to_return
+
     def disconnect_engine(self) -> None:
         """Disconnecting sqlite database engine"""
         if self.connected:
             self.connected.close()
+            self.connected = False
         else:
             print('Not connected to database')
