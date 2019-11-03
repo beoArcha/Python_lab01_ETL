@@ -14,5 +14,4 @@ def elapsed(func):
             return ret
         elif 'return_elapsed' in kwargs and kwargs['return_elapsed']:
             return ret, elapsed_time
-
     return elapse

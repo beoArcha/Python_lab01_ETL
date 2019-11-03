@@ -9,9 +9,9 @@ from Tools import elapsed
 class DataImport:
     """Imports data from csv file to sqlite database"""
 
-    def __init__(self, address, separator=';', header=False, test=False):
+    def __init__(self, separator=';', header=False, test=False):
         """C'str"""
-        self.address = address
+        self.address = ''
         self.separator = separator
         self.connected = False
         self.first_line_as_header = header
@@ -117,7 +117,8 @@ class DataImport:
                 list_to_return = [i for i in ret]
             except Exception as e:
                 print(e)
-            self.disconnect_engine()
+            finally:
+                self.disconnect_engine()
             return list_to_return
 
     def disconnect_engine(self) -> None:

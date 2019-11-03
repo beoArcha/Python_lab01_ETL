@@ -46,8 +46,10 @@ def main(**kwargs) -> None:
     default_table_columns_names = {'tracks': ['performance_id', 'track_id', 'artist', 'title'],
                                    'triplets': ['user_id', 'track_id', 'date']}
     # endregion
+    # region execution
     create(_is_print_elapsed, _is_test, default_directories, default_table_columns_names)
     print_info(_is_print_elapsed)
+    # endregion
 
 
 if __name__ == "__main__":
