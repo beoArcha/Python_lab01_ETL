@@ -7,7 +7,7 @@ setup(
     url='',
     license='MIT License',
     author='Marcin Stefanski',
-    author_email='marcinstefanski@outlook.com',
+    author_email='',
     description='for learning purposes',
-    install_requires=['pandas', 'sqlalchemy']
+    install_requires=['sqlalchemy']
 )
