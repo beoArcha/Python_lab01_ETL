@@ -39,7 +39,7 @@ def print_result(result: list, text: str) -> None:
 def main(**kwargs) -> None:
     # region prepare
     _is_print_elapsed = True
-    _is_test = True
+    _is_test = False
     _dir = os.path.dirname(__file__)
     default_directories = {'tracks': '{}\\Files\\unique_tracks.txt'.format(_dir),
                            'triplets': '{}\\Files\\triplets_sample_20p.txt'.format(_dir)}
