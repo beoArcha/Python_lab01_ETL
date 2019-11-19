@@ -1,8 +1,7 @@
-import sys
-import os
-import sqlalchemy as db
+from sys import exc_info
+from os import path
 from typing import Generator
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, null, MetaData, Table, create_engine
 from Tools import elapsed
 
 
@@ -15,14 +14,14 @@ class DataImport:
         self.separator = separator
         self.connected = False
         self.first_line_as_header = header
-        self.engine = db.null
-        self.metadata = db.MetaData()
+        self.engine = null
+        self.metadata = MetaData()
         self.encoding = 'ISO-8859-1'
         self.columns_name_list = list()
         self.columns_name = ''
         self.test = test
         self.INSERT_QUERY = 'INSERT INTO {table} ({fields}) VALUES ({values})'
-        self.DATABASE = 'sqlite:///{}\\music.sqlite'.format(os.path.dirname(__file__))
+        self.DATABASE = 'sqlite:///{}\\music.sqlite'.format(path.dirname(__file__))
         self.TEST_LIMIT = 10000
 
     def _read_line(self) -> Generator[list, list, str]:
@@ -66,10 +65,10 @@ class DataImport:
             self.columns_name = ','.join(names_of_columns)
         try:
             if not self.engine.dialect.has_table(self.engine, name):
-                database = db.Table(name, self.metadata, *list_of_columns)
+                database = Table(name, self.metadata, *list_of_columns)
                 database.create(self.engine)
         except Exception as e:
-            ex = sys.exc_info()
+            ex = exc_info()
             print('Unexpected error: {}\n{}'.format(str(ex[0]), e))
 
     @elapsed
@@ -101,7 +100,7 @@ class DataImport:
     @elapsed
     def create_engine(self, **kwargs) -> None:
         """Creating connection to sqlite database"""
-        self.engine = db.create_engine(self.DATABASE)
+        self.engine = create_engine(self.DATABASE)
         self.connected = self.engine.connect()
 
     @elapsed
