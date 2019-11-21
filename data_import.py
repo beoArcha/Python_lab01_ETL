@@ -2,7 +2,7 @@ from sys import exc_info
 from os import path
 from typing import Generator
 from sqlalchemy import Column, Integer, String, null, MetaData, Table, create_engine
-from Tools import elapsed
+from tools import elapsed
 
 
 class DataImport:
