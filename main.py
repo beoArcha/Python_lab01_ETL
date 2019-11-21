@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 from os import path
-from DataImport import DataImport
-from Tools import elapsed, Elapsed
+from data_import import DataImport
+from tools import elapsed, Elapsed
 
 
 def create(is_print_elapsed: bool,
